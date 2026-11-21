@@ -1,0 +1,22 @@
+---
+interface Props {
+  kind?: 'ampersand' | 'delivery';
+}
+const { kind } = Astro.props;
+---
+
+{kind && (
+  <svg class="trace-mark" viewBox="0 0 48 39" aria-hidden="true" fill="none" stroke="currentColor">
+    {kind === 'ampersand' ? (
+      <path
+        stroke-width="4"
+        d="M40 18C34 31 24 38 14 34 3 30 7 21 18 16 32 9 32 2 25 3 10 4 19 22 38 34"
+      />
+    ) : (
+      <g stroke-width="3">
+        <path d="m21 4 9 5 4 9-4 9-11 4-9-5-3-9 4-9z" />
+        <path stroke-dasharray="4 2" d="m28 9 9 5 4 9-4 9-11 4-9-5-3-9 4-9z" />
+      </g>
+    )}
+  </svg>
+)}

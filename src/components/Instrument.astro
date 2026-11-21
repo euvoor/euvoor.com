@@ -1,4 +1,5 @@
 ---
+import DeliveryPrints from './DeliveryPrints.astro';
 import { specimen, comparePasses } from '../lib/ampersand.mjs';
 import { compareDeliveries } from '../lib/delivery.mjs';
 import ampersandSource from '../lib/ampersand.mjs?raw';
@@ -13,6 +14,7 @@ const labels = amp ? ['Execution', 'Permission check'] : ['First delivery', 'Sec
 ---
 
 <section class="instrument" data-instrument={kind} aria-label="Interactive test bench">
+  {!amp && <DeliveryPrints />}
   <form hidden class="controls">
     <label>
       {amp ? 'Input specimen' : 'First event ID'}
@@ -78,6 +80,11 @@ const labels = amp ? ['Execution', 'Permission check'] : ['First delivery', 'Sec
       bench.querySelector('.fixture')!.textContent = amp
         ? 'Bench run · input ' + (first || '∅ (empty string)')
         : 'Bench run · event IDs ' + first + ' and ' + second;
+      if (!amp) {
+        bench.querySelector('[data-print="first"]')!.textContent = first;
+        bench.querySelector('[data-print="second"]')!.textContent = second;
+        bench.querySelector('.print-note strong')!.textContent = trace.patched[1];
+      }
       const identical = trace.original[1] === trace.patched[1];
       bench.querySelector('.run-status')!.textContent = amp
         ? identical

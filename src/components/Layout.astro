@@ -16,18 +16,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1b221e" />
+    <meta name="theme-color" content="#151513" />
     <meta name="description" content={description} />
     {!indexable && <meta name="robots" content="noindex" />}
     <title>{title} · Oussama Elgoumri</title>
     {indexable && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/mark.svg" type="image/svg+xml" />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="Euvoor’s workshop"
-      href="/feed.xml"
-    />
+    <link rel="alternate" type="application/rss+xml" title="Euvoor’s workshop" href="/feed.xml" />
     <meta property="og:title" content={title + ' · Oussama Elgoumri'} />
     <meta property="og:description" content={description} />
     {indexable && <meta property="og:url" content={canonical} />}
@@ -37,16 +32,28 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="skip" href="#main">
       Skip to content
     </a>
-    <header class="masthead">
-      <div class="wrap head-inner">
-        <a class="wordmark" href="/" aria-label="Euvoor, home">
-          <span class="press-mark" aria-hidden="true">
-            <i></i>
-            <i></i>
-            <i></i>
-          </span>
-          euvoor<span class="dot">.</span>
-        </a>
+    <header class="index-rail">
+      <a class="signature" href="/" aria-label="Oussama Elgoumri. Home">
+        <svg class="monogram" viewBox="0 0 64 50" aria-hidden="true">
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M1 25C1 12 7 7 18 7s17 5 17 18-7 18-17 18S1 37 1 25Zm10 0c0 7 2 10 7 10s7-3 7-10-2-10-7-10-7 3-7 10ZM41 8h22v8H50v5h11v7H50v6h13v8H40z"
+          />
+          <path fill="#fb6477" d="m38 1 7 1-12 47-7-1z" />
+        </svg>
+        <span>
+          Oussama
+          <br />
+          Elgoumri<span class="signature-dot">.</span>
+        </span>
+      </a>
+      <div class="rail-body">
+        <p class="byline">
+          Independent engineer
+          <br />
+          Morocco
+        </p>
         <nav aria-label="Workshop sections">
           {Object.entries(sections).map(([key, section]) => (
             <a
@@ -63,21 +70,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
             </a>
           ))}
         </nav>
-        <a class="contact-link" href="mailto:euvoor@gmail.com">
-          Email Oussama <span aria-hidden="true">↗</span>
-        </a>
+      </div>
+      <div class="rail-foot">
+        <a href="mailto:euvoor@gmail.com">Email Oussama ↗</a>
+        <a href="https://github.com/euvoor">GitHub ↗</a>
       </div>
     </header>
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <footer class="site-footer wrap">
-      <div>
-        <a class="footer-name" href="/">
-          Oussama Elgoumri<span class="dot">.</span>
-        </a>
-        <p>Independent software engineer · Morocco</p>
-      </div>
+    <footer class="site-footer">
+      <a href="/" class="footer-name">
+        euvoor.
+      </a>
       <nav aria-label="Contact and feeds">
         <a href="mailto:euvoor@gmail.com">Email ↗</a>
         <a href="https://github.com/euvoor">GitHub ↗</a>

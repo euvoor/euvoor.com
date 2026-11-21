@@ -1,14 +1,16 @@
 ---
 import Layout from '../../components/Layout.astro';
+import TraceMark from '../../components/TraceMark.astro';
 import { sections, type Section } from '../../lib/sections';
-import { readArchive, sectionOf, dateLabel, pathFor } from '../../lib/archive';
+import { readArchive, sectionOf, dateLabel, pathFor, traceMarkFor } from '../../lib/archive';
 
 export async function getStaticPaths() {
   return Object.keys(sections).map((section) => ({ params: { section } }));
 }
 const key = Astro.params.section as Section;
 const section = sections[key];
-const entries = (await readArchive()).filter((entry) => sectionOf(entry) === key);
+const archive = await readArchive();
+const entries = archive.filter((entry) => sectionOf(entry) === key);
 ---
 
 <Layout title={section.name} description={section.description} active={key}>
@@ -36,9 +38,7 @@ const entries = (await readArchive()).filter((entry) => sectionOf(entry) === key
               <h2>{entry.data.title}</h2>
               <p>{entry.data.summary}</p>
             </div>
-            <span class="arrow" aria-hidden="true">
-              ↗
-            </span>
+            <TraceMark kind={traceMarkFor(entry, archive)} />
           </a>
         </li>
       ))}

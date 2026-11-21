@@ -1,145 +1,43 @@
 ---
 import Layout from '../components/Layout.astro';
-import Specimen from '../components/Specimen.astro';
-import Instrument from '../components/Instrument.astro';
-import { readArchive, dateLabel, pathFor, sectionOf } from '../lib/archive';
+import PinnedTrace from '../components/PinnedTrace.astro';
+import TraceMark from '../components/TraceMark.astro';
+import { readArchive, dateLabel, pathFor, sectionOf, traceMarkFor } from '../lib/archive';
 import { sections } from '../lib/sections';
 
 const archive = await readArchive();
-const cover = archive.find((entry) => sectionOf(entry) === 'case-files');
-const recent = archive.filter((entry) => entry !== cover).slice(0, 4);
+const pinned = archive.find((entry) => entry.id === 'case-files/an-ampersand-too-far');
+if (!pinned) throw new Error('The pinned ampersand case is missing.');
 ---
 
 <Layout
   title="Oussama’s workshop"
-  description="Oussama Elgoumri investigates software failures, builds small tools, and sends patches upstream. Step up to the bench and try a regression test."
+  description="Oussama Elgoumri’s engineering workshop. Pull the pin on a WooCommerce bug, run the tests, or read the case file."
 >
-  <section class="workshop" aria-labelledby="hero-title">
-    <div class="wrap worktop">
-      <div class="introduction">
-        <div class="eyeline">
-          <span class="pilot" aria-hidden="true"></span> Independent engineer · Morocco
-        </div>
-        <h1 id="hero-title">
-          Oussama’s
-          <br />
-          <em>workshop.</em>
-        </h1>
-        <p class="intro-copy">
-          I’m Oussama Elgoumri. When the machine wins, I take notes. A WooCommerce bug gave
-          itself away with a single ampersand.
-        </p>
-        <div class="entrances">
-          <a class="button ignition" href="/laboratory/ampersand-bench/" data-run-sample>
-            <span aria-hidden="true">▶</span> Run the ampersand test
-          </a>
-          <a class="text-link" href="/case-files/an-ampersand-too-far/">
-            Read the case file <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </div>
-      <div class="station" id="inspection-station">
-        <div class="station-rail">
-          <span class="screw" aria-hidden="true"></span>
-          <span>Inspection bench</span>
-          <span class="engraved">No mercy for bugs.</span>
-          <span class="screw" aria-hidden="true"></span>
-        </div>
-        <fieldset class="station-modes">
-          <legend class="sr-only">Inspection bench display</legend>
-          <input class="sr-only" name="display" type="radio" id="optical-mode" checked />
-          <label for="optical-mode">Optics</label>
-          <input class="sr-only" name="display" type="radio" id="trace-mode" />
-          <label for="trace-mode">Test bench</label>
-        </fieldset>
-        <div class="optical-face">
-          <Specimen />
-        </div>
-        <div class="trace-face">
-          <h2>Ampersand trace</h2>
-          <Instrument kind="ampersand" />
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="ledger wrap" aria-labelledby="ledger-title">
-    <div class="ledger-heading">
-      <h2 id="ledger-title">
-        The workshop log<span>.</span>
+  <PinnedTrace entry={pinned} />
+  <section class="archive wrap" aria-labelledby="archive-title">
+    <div class="archive-heading">
+      <h2 id="archive-title">
+        On file<span>.</span>
       </h2>
-      <a class="feed-link" href="/feed.xml">
-        Subscribe via RSS ↗
-      </a>
+      <a href="/feed.xml">RSS ↗</a>
     </div>
-    <div class="log-spread">
-      {cover && (
-        <article class="cover-file">
-          <div class="file-tab">Case file</div>
-          <div class="file-content">
-            <time datetime={cover.data.date.toISOString()}>{dateLabel(cover.data.date)}</time>
-            <h3>
-              <a href={pathFor(cover)}>{cover.data.title}</a>
-            </h3>
-            <p>{cover.data.summary}</p>
-            <a class="text-link" href={pathFor(cover)}>
-              Open investigation <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </article>
-      )}
-      <div class="log-list">
-        <h3>Latest entries</h3>
-        <ol>
-          {recent.map((entry) => (
-            <li>
-              <a href={pathFor(entry)}>
-                <div>
-                  <small>
-                    {sections[sectionOf(entry)].singular} · {dateLabel(entry.data.date)}
-                  </small>
-                  <span>{entry.data.title}</span>
-                </div>
-                <b aria-hidden="true">↗</b>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </div>
-  </section>
-  <section class="directory wrap" aria-labelledby="directory-title">
-    <h2 id="directory-title">Browse the shelves</h2>
-    <div class="shelves">
-      {Object.entries(sections).map(([key, section]) => (
-        <a href={'/' + key + '/'}>
-          <h3>
-            {section.name}
-            <span aria-hidden="true"> ↗</span>
-          </h3>
-          <p>{section.description}</p>
-        </a>
+    <ol class="register">
+      {archive.map((entry) => (
+        <li>
+          <a href={pathFor(entry)}>
+            <span class="entry-mark">
+              <TraceMark kind={traceMarkFor(entry, archive)} />
+            </span>
+            <span class="entry-title">{entry.data.title}</span>
+            <span class="entry-type">{sections[sectionOf(entry)].singular}</span>
+            <time datetime={entry.data.date.toISOString()}>{dateLabel(entry.data.date)}</time>
+            <span class="entry-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </a>
+        </li>
       ))}
-    </div>
+    </ol>
   </section>
 </Layout>
-<script>
-  const trigger = document.querySelector<HTMLAnchorElement>('[data-run-sample]');
-  const mode = document.querySelector<HTMLInputElement>('#trace-mode');
-  const form = document.querySelector<HTMLFormElement>('.trace-face form');
-  trigger?.addEventListener('click', (event) => {
-    if (
-      event.metaKey ||
-      event.ctrlKey ||
-      event.altKey ||
-      event.shiftKey ||
-      !mode ||
-      !form ||
-      form.hidden
-    )
-      return;
-    event.preventDefault();
-    mode.checked = true;
-    form.requestSubmit();
-    form.querySelector('input')?.focus();
-  });
-</script>

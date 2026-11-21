@@ -1,0 +1,249 @@
+---
+import PaperStrip from './PaperStrip.astro';
+import { pathFor, dateLabel, type Entry } from '../lib/archive';
+import { comparePasses, specimen } from '../lib/ampersand.mjs';
+
+interface Props {
+  entry: Entry;
+}
+const { entry } = Astro.props;
+const reference = comparePasses(specimen);
+// The seven data tracks carry the ASCII value of the permission callback's output.
+function punchTape(value: string) {
+  return Array.from(value).flatMap((character, column) =>
+    Array.from({ length: 7 }, (_, bit) => ({ column, bit })).filter(
+      ({ bit }) => (character.charCodeAt(0) & (1 << bit)) !== 0,
+    ),
+  );
+}
+---
+
+<section class="pinned-case" data-stage="pinned" aria-labelledby="pinned-title">
+  <header class="case-line">
+    <span>
+      <i aria-hidden="true"></i> Pinned case
+    </span>
+    <time datetime={entry.data.date.toISOString()}>{dateLabel(entry.data.date)}</time>
+  </header>
+  <div class="wall">
+    <div class="tape-stage">
+      <svg class="ribbon" viewBox="60 0 540 440" role="img" aria-labelledby="ribbon-desc">
+        <title id="ribbon-desc">An ampersand folded from pink paper tape. A pin holds an extra loop in place.</title>
+        <defs>
+          <linearGradient
+            id="underside"
+            x1="0"
+            y1="0"
+            x2=".85"
+            y2="1"
+            gradientUnits="objectBoundingBox"
+          >
+            <stop stop-color="#671d35" />
+            <stop offset=".42" stop-color="#a92c4e" />
+            <stop offset="1" stop-color="#ec566d" />
+          </linearGradient>
+          <linearGradient id="curl">
+            <stop stop-color="#fb6477" />
+            <stop offset=".49" stop-color="#ffa5ad" />
+            <stop offset="1" stop-color="#d84b65" />
+          </linearGradient>
+          <linearGradient id="light" x2=".4" y2="1">
+            <stop stop-color="#ffadba" />
+            <stop offset=".45" stop-color="#ff8597" />
+            <stop offset="1" stop-color="#fb6477" />
+          </linearGradient>
+          <linearGradient id="belly">
+            <stop stop-color="#ed526c" />
+            <stop offset=".28" stop-color="#ff92a2" />
+            <stop offset=".72" stop-color="#fb6477" />
+            <stop offset="1" stop-color="#ca405a" />
+          </linearGradient>
+          <linearGradient id="violet-fold">
+            <stop stop-color="#8875b9" />
+            <stop offset=".27" stop-color="#bbadeb" />
+            <stop offset="1" stop-color="#dacfef" />
+          </linearGradient>
+          <g id="pin-body">
+            <path d="m5 60 34-31" fill="none" stroke="#141411" stroke-width="5" />
+            <path d="m5 59 34-31" fill="none" stroke="#ddd8d2" stroke-width="2" />
+            <path d="m26 26 6 12 12 2 7-9-5-11-11-2z" fill="#87962e" />
+            <path d="m27 25 10 6 12-6-10-9z" fill="#dafa55" />
+            <path d="m35 24 8-11 11 6-9 13z" fill="#a9c544" />
+            <path d="m37 11 10-5 12 6 1 7-10 6-12-7z" fill="#cedc4c" />
+            <path d="m37 11 11-7 12 7-10 7z" fill="#edff8b" />
+          </g>
+        </defs>
+        <g transform="translate(45 0)">
+          <g class="fixed-strip">
+            <path
+              d="m473 90 53-4 -3 262 -10-3 -5 4 -7-3 -7 3 -7-3 -8 3z"
+              fill="url(#violet-fold)"
+            />
+            <path
+              d="m483 99 2 238m28-239-1 240"
+              fill="none"
+              stroke="#493d59"
+              stroke-width="3"
+              stroke-dasharray="2 8"
+            />
+            <g fill="#494052">
+              {punchTape(reference.patched[1]).map(({ column, bit }) => (
+                <circle cx={489 + bit * 3.5} cy={123 + column * 8} r="1.4" />
+              ))}
+            </g>
+            <path d="m467 91 66-6" stroke="#efeee7" stroke-width="2" />
+          </g>
+        </g>
+        <path d="m471 160 54 10 -2 4 -54-10z" fill="#060605" />
+        <path d="m472 164 51 9" fill="none" stroke="#68665e" stroke-width="1" />
+        <g class="pink-tape">
+          <g class="loose-end">
+            <PaperStrip
+              start={[497, 168, 17]}
+              bends={[
+                [486, 226, 411, 322, 342, 352, 26, 'url(#underside)'],
+                [275, 384, 187, 379, 168, 325, 23, 'url(#belly)'],
+                [148, 267, 237, 225, 297, 191, 17, 'url(#curl)'],
+              ]}
+            />
+          </g>
+          <g class="extra-loop">
+            <PaperStrip
+              start={[324, 188, 10]}
+              bends={[
+                [367, 169, 444, 172, 449, 116, 13, 'url(#underside)'],
+                [455, 69, 397, 68, 393, 113, 12, 'url(#light)'],
+                [386, 149, 401, 164, 418, 181, 6, 'url(#curl)'],
+              ]}
+            />
+          </g>
+          <PaperStrip
+            start={[297, 191, 17]}
+            bends={[
+              [334, 169, 391, 125, 367, 86, 17, 'url(#underside)'],
+              [344, 49, 266, 68, 259, 111, 22, 'url(#curl)'],
+              [251, 155, 295, 199, 335, 237, 22, 'url(#light)'],
+              [383, 282, 446, 341, 488, 371, 23, 'url(#belly)'],
+            ]}
+          />
+          <g transform="translate(401 298) rotate(41)" fill="#5e2939">
+            {punchTape(reference.original[1]).map(({ column, bit }) => (
+              <circle cx={column * 7.2} cy={(bit - 3) * 3.5} r="1.5" />
+            ))}
+          </g>
+          <path d="m144 306 33 2m238-21 5-7" stroke="#fff1ee" stroke-width=".7" opacity=".5" />
+        </g>
+        <path
+          class="trace-route"
+          pathLength="1"
+          d="M497 168C478 249 411 323 342 352S187 379 168 325 237 225 297 191C337 169 433 190 450 135 466 88 407 74 398 119 390 150 410 190 428 202M297 191C334 169 391 125 367 86 344 49 266 68 259 111 251 155 295 199 335 237 383 282 446 341 488 371"
+        />
+        <use class="static-pin" href="#pin-body" transform="translate(438 56) scale(.67)" />
+      </svg>
+      <div class="pin-position">
+        <button class="pin-control" type="button" hidden>
+          <svg class="pin-drawing" viewBox="0 0 63 66" aria-hidden="true">
+            <use href="#pin-body" />
+          </svg>
+          <span class="pin-label">Pull the pin</span>
+        </button>
+      </div>
+    </div>
+    <div class="case-caption">
+      <span class="case-source">WooCommerce</span>
+      <h1 id="pinned-title">
+        <a href={pathFor(entry)}>{entry.data.title}</a>
+      </h1>
+      <a class="open-case" href={pathFor(entry)}>
+        Read the case file <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+  <div class="trace-slip">
+    <p class="trace-input">
+      <span>Input</span> <code>{specimen}</code>
+    </p>
+    <p class="trace-result" role="status" aria-live="polite" aria-atomic="true">
+      The permission check got a second bite.
+    </p>
+    <a href="/laboratory/ampersand-bench/">Test your own input ↗</a>
+  </div>
+  <noscript>
+    <p class="static-trace">
+      Permission check · original <code>{reference.original[1]}</code> · patched{' '}
+      <code>{reference.patched[1]}</code>
+    </p>
+  </noscript>
+</section>
+
+<script>
+  import { comparePasses, specimen } from '../lib/ampersand.mjs';
+
+  function wirePin(wall: HTMLElement) {
+    const control = wall.querySelector<HTMLButtonElement>('.pin-control')!;
+    const label = control.querySelector('.pin-label')!;
+    const pin = control.querySelector<SVGSVGElement>('.pin-drawing')!;
+    const status = wall.querySelector('.trace-result')!;
+    const description = wall.querySelector('#ribbon-desc')!;
+    const initialDescription = description.textContent;
+    const initialStatus = status.textContent;
+    let drag: { id: number; x: number; y: number } | undefined;
+    let pulled = false;
+
+    function advance() {
+      const trace = comparePasses(specimen);
+      switch (wall.dataset.stage) {
+        case 'pinned':
+          wall.dataset.stage = 'caught';
+          label.textContent = 'Compare the patch';
+          description.textContent = 'The pin is out. The pink strip has caught on its second loop.';
+          status.textContent =
+            'Original permission check · ' + trace.original[1] + ' · prepared twice.';
+          break;
+        case 'caught':
+          wall.dataset.stage = 'patched';
+          label.textContent = 'Pin it again';
+          description.textContent = 'A straight violet strip hangs beside the pink double loop.';
+          status.textContent =
+            'Patched permission check · ' + trace.patched[1] + ' · prepared once.';
+          break;
+        default:
+          wall.dataset.stage = 'pinned';
+          label.textContent = 'Pull the pin';
+          description.textContent = initialDescription;
+          status.textContent = initialStatus;
+      }
+    }
+    control.hidden = false;
+    control.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      pulled = false;
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+      control.setPointerCapture(event.pointerId);
+    });
+    control.addEventListener('pointermove', (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      const dx = event.clientX - drag.x;
+      const dy = event.clientY - drag.y;
+      const distance = Math.max(1, Math.hypot(dx, dy));
+      const scale = Math.min(1, 34 / distance);
+      pin.style.translate = dx * scale + 'px ' + dy * scale + 'px';
+    });
+    control.addEventListener('pointerup', (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      pulled = Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 14;
+      drag = undefined;
+      if (pulled) advance();
+    });
+    control.addEventListener('lostpointercapture', () => {
+      drag = undefined;
+      pin.style.removeProperty('translate');
+    });
+    control.addEventListener('click', (event) => {
+      if (!pulled || event.detail === 0) advance();
+      pulled = false;
+    });
+  }
+  const wall = document.querySelector<HTMLElement>('.pinned-case');
+  if (wall) wirePin(wall);
+</script>

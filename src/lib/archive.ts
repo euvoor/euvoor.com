@@ -42,3 +42,10 @@ export function neighbors(entry: Entry, archive: Entry[]) {
       other.data.related.some((ref) => ref.id === entry.id),
   );
 }
+
+export function traceMarkFor(entry: Entry, archive: Entry[]) {
+  return (
+    entry.data.instrument ??
+    neighbors(entry, archive).find((item) => item.data.instrument)?.data.instrument
+  );
+}

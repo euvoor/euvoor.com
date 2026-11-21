@@ -1,18 +1,19 @@
 ---
 import { render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
+import TraceMark from '../../components/TraceMark.astro';
 import Instrument from '../../components/Instrument.astro';
-import { readArchive, sectionOf, neighbors, dateLabel, pathFor } from '../../lib/archive';
+import { readArchive, sectionOf, neighbors, traceMarkFor, dateLabel, pathFor } from '../../lib/archive';
 import { sections } from '../../lib/sections';
 
 export async function getStaticPaths() {
   const archive = await readArchive();
   return archive.map((entry) => ({
     params: { section: sectionOf(entry), slug: entry.id.split('/')[1] },
-    props: { entry, related: neighbors(entry, archive) },
+    props: { entry, mark: traceMarkFor(entry, archive), related: neighbors(entry, archive) },
   }));
 }
-const { entry, related } = Astro.props;
+const { entry, related, mark } = Astro.props;
 const section = sectionOf(entry);
 const { Content } = await render(entry);
 ---
@@ -42,6 +43,7 @@ const { Content } = await render(entry);
         <Content />
       </div>
       <aside class="margin-notes" aria-label="Sources and related work">
+        {(related.length > 0 || entry.data.evidence.length > 0) && <TraceMark kind={mark} />}
         {entry.data.evidence.length > 0 && (
           <section>
             <h2>Evidence</h2>

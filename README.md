@@ -37,4 +37,4 @@ The feed and canonical links use the stable Pages hostname during the initial la
 
 ## Credits
 
-Robert Hooke’s flea comes from plate XXXIV of *Micrographia* (1665). The [Science History Institute](https://digital.sciencehistory.org/works/bk128c17q) provides the public-domain scan. The workshop serves Barlow Condensed, Instrument Serif, and IBM Plex Mono locally. Their licenses accompany the fonts in the build.
+The workshop serves Archivo Black, Space Grotesk, and DM Mono locally. Their licenses accompany the fonts in the build.
