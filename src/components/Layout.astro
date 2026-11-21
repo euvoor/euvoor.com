@@ -16,7 +16,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f5f0e4" />
+    <meta name="theme-color" content="#1b221e" />
     <meta name="description" content={description} />
     {!indexable && <meta name="robots" content="noindex" />}
     <title>{title} · Oussama Elgoumri</title>
@@ -37,34 +37,36 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="skip" href="#main">
       Skip to content
     </a>
-    <header class="masthead wrap">
-      <a class="wordmark" href="/" aria-label="Euvoor, home">
-        <span class="press-mark" aria-hidden="true">
-          <i></i>
-          <i></i>
-          <i></i>
-        </span>
-        euvoor<span class="dot">.</span>
-      </a>
-      <nav aria-label="Workshop sections">
-        {Object.entries(sections).map(([key, section]) => (
-          <a
-            href={'/' + key + '/'}
-            aria-current={
-              active === key
-                ? Astro.url.pathname === '/' + key + '/'
-                  ? 'page'
-                  : 'location'
-                : undefined
-            }
-          >
-            {section.name}
-          </a>
-        ))}
-      </nav>
-      <a class="contact-link" href="mailto:euvoor@gmail.com">
-        Get in touch <span aria-hidden="true">↗</span>
-      </a>
+    <header class="masthead">
+      <div class="wrap head-inner">
+        <a class="wordmark" href="/" aria-label="Euvoor, home">
+          <span class="press-mark" aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+          euvoor<span class="dot">.</span>
+        </a>
+        <nav aria-label="Workshop sections">
+          {Object.entries(sections).map(([key, section]) => (
+            <a
+              href={'/' + key + '/'}
+              aria-current={
+                active === key
+                  ? Astro.url.pathname === '/' + key + '/'
+                    ? 'page'
+                    : 'location'
+                  : undefined
+              }
+            >
+              {section.name}
+            </a>
+          ))}
+        </nav>
+        <a class="contact-link" href="mailto:euvoor@gmail.com">
+          Email Oussama <span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </header>
     <main id="main" tabindex="-1">
       <slot />

@@ -18,7 +18,8 @@ const entries = (await readArchive()).filter((entry) => sectionOf(entry) === key
     </a>
     <header class="section-heading">
       <div class="eyeline">
-        <span class="line"></span> Workshop directory / {section.index}
+        <span class="line"></span> {entries.length} {entries.length === 1 ? 'entry' : 'entries'}{' '}
+        on file
       </div>
       <h1>
         {section.name}
