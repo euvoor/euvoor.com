@@ -1,6 +1,6 @@
 # Oussama Elgoumri’s workshop
 
-The files behind [euvoor.com](https://euvoor.com). The Case Files hold engineering investigations. The Laboratory lets you run the small experiments that go with them. The Common Arsenal records upstream contributions, and the Notebook leaves room for unfinished thoughts.
+Source for Oussama Elgoumri’s personal website. The Case Files hold engineering investigations. The Laboratory lets you run the small experiments that go with them. The Common Arsenal records upstream contributions, and the Notebook leaves room for unfinished thoughts.
 
 ## Run locally
 
@@ -32,6 +32,8 @@ The two browser experiments share their functions with the regression tests. Eac
 ## Cloudflare Pages
 
 Connect this repository to a Pages project. Set the production branch to `master`, the build command to `npm run build`, and the output directory to `dist`. The root contains `.node-version` and `wrangler.toml` for the Node version and static output. A pull request from a branch in this repository can receive a preview deployment. Only the generated site goes to Pages.
+
+The feed and canonical links use the stable Pages hostname during the initial launch. After the custom domain serves the site over HTTPS, set the production build variable `SITE_URL` to `https://euvoor.com` and rebuild. Local builds default to `https://euvoor.test`.
 
 ## Credits
 

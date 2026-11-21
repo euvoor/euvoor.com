@@ -3,13 +3,14 @@ import path from 'node:path';
 import { parseHTML } from 'linkedom';
 
 const root = path.resolve('dist');
-const origin = 'https://euvoor.com';
 const files = await readdir(root, { recursive: true });
 const documents = new Map();
 for (const file of files.filter((file) => file.endsWith('.html'))) {
   const { document } = parseHTML(await readFile(path.join(root, file), 'utf8'));
   documents.set(file, document);
 }
+const home = documents.get('index.html');
+const origin = new URL(home.querySelector('link[rel="canonical"]').getAttribute('href')).origin;
 const failures = [];
 for (const [file, document] of documents) {
   const pathname = '/' + file.replace(/index\.html$/, '');
