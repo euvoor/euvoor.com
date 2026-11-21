@@ -1,0 +1,113 @@
+---
+import Layout from '../components/Layout.astro';
+import Specimen from '../components/Specimen.astro';
+import { readArchive, dateLabel, pathFor, sectionOf } from '../lib/archive';
+import { sections } from '../lib/sections';
+const entries = await readArchive();
+const featured = entries.find((entry) => sectionOf(entry) === 'case-files');
+const recent = entries.filter((entry) => entry.id !== featured?.id).slice(0, 4);
+---
+
+<Layout
+  title="No mercy for bugs"
+  description="Oussama Elgoumri’s engineering workshop. Case files, small working experiments, open-source patches, and notes from the bench."
+>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <div class="eyeline">
+        <span class="line"></span> The engineer’s workshop
+      </div>
+      <h1 id="hero-title">
+        No mercy
+        <br />
+        <em>for bugs.</em>
+      </h1>
+      <p class="lede">
+        I’m <strong>Oussama Elgoumri</strong>, an independent software engineer. When the
+        machine wins, I take notes.
+      </p>
+      <div class="hero-links">
+        <a class="button" href="/case-files/">
+          Open the case files <span aria-hidden="true">↗</span>
+        </a>
+        <a class="inline-link" href="/laboratory/">
+          Visit the lab <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+    <Specimen />
+  </section>
+  <section class="workbench" aria-labelledby="bench-title">
+    <div class="wrap bench-inner">
+      <header class="bench-heading">
+        <span class="bench-symbol" aria-hidden="true">
+          ✳
+        </span>
+        <h2 id="bench-title">On the workbench</h2>
+        <span class="bench-rule"></span>
+      </header>
+      <div class="bench-columns">
+        {featured && (
+          <article class="feature">
+            <div class="eyeline">
+              <span class="signal"></span> Featured case file
+            </div>
+            <h3>
+              <a href={pathFor(featured)}>
+                {featured.data.title}
+                <span class="dot">.</span>
+              </a>
+            </h3>
+            <p>{featured.data.summary}</p>
+            <a class="feature-link" href={pathFor(featured)}>
+              Read the investigation <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        )}
+        <div class="recent">
+          <h3>Recent entries</h3>
+          <ul>
+            {recent.map((entry) => (
+              <li>
+                <a href={pathFor(entry)}>
+                  <small>
+                    {sections[sectionOf(entry)].singular} · {dateLabel(entry.data.date)}
+                  </small>
+                  <span>
+                    {entry.data.title} <b aria-hidden="true">↗</b>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="directory wrap" aria-labelledby="directory-title">
+    <div class="directory-intro">
+      <div class="eyeline">
+        <span class="line"></span> Directory
+      </div>
+      <h2 id="directory-title">
+        Around the
+        <br />
+        <em>workshop.</em>
+      </h2>
+    </div>
+    <div class="directory-rows">
+      {Object.entries(sections).map(([key, section]) => (
+        <a href={'/' + key + '/'}>
+          <span class="directory-number">{section.index}</span>
+          <div>
+            <h3>{section.name}</h3>
+            <p>{section.description}</p>
+          </div>
+          <span class="arrow" aria-hidden="true">
+            ↗
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

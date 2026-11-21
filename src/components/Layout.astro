@@ -1,0 +1,86 @@
+---
+import '../styles/site.css';
+import { sections, type Section } from '../lib/sections';
+interface Props {
+  title: string;
+  description: string;
+  active?: Section;
+  indexable?: boolean;
+}
+const { title, description, active, indexable = true } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f0e4" />
+    <meta name="description" content={description} />
+    {!indexable && <meta name="robots" content="noindex" />}
+    <title>{title} · Oussama Elgoumri</title>
+    {indexable && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/mark.svg" type="image/svg+xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Euvoor’s workshop"
+      href="/feed.xml"
+    />
+    <meta property="og:title" content={title + ' · Oussama Elgoumri'} />
+    <meta property="og:description" content={description} />
+    {indexable && <meta property="og:url" content={canonical} />}
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
+    <header class="masthead wrap">
+      <a class="wordmark" href="/" aria-label="Euvoor, home">
+        <span class="press-mark" aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+        euvoor<span class="dot">.</span>
+      </a>
+      <nav aria-label="Workshop sections">
+        {Object.entries(sections).map(([key, section]) => (
+          <a
+            href={'/' + key + '/'}
+            aria-current={
+              active === key
+                ? Astro.url.pathname === '/' + key + '/'
+                  ? 'page'
+                  : 'location'
+                : undefined
+            }
+          >
+            {section.name}
+          </a>
+        ))}
+      </nav>
+      <a class="contact-link" href="mailto:euvoor@gmail.com">
+        Get in touch <span aria-hidden="true">↗</span>
+      </a>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer wrap">
+      <div>
+        <a class="footer-name" href="/">
+          Oussama Elgoumri<span class="dot">.</span>
+        </a>
+        <p>Independent software engineer · Morocco</p>
+      </div>
+      <nav aria-label="Contact and feeds">
+        <a href="mailto:euvoor@gmail.com">Email ↗</a>
+        <a href="https://github.com/euvoor">GitHub ↗</a>
+        <a href="/feed.xml">RSS</a>
+      </nav>
+    </footer>
+  </body>
+</html>
